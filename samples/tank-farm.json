@@ -1,0 +1,34 @@
+// A small tank farm: levels, temperatures, a flow counter, pumps and alarms.
+// Addresses are zero based. Point an HMI, SCADA or your own client at it to test.
+{
+  "port": 5020,
+  "tickMilliseconds": 200,
+  "points": [
+    { "name": "Tank1 Level %",      "table": "ir",   "address": 0,  "dataType": "float32", "value": 50,
+      "signal": { "type": "sine", "min": 20, "max": 85, "periodSeconds": 120 } },
+
+    { "name": "Tank2 Level %",      "table": "ir",   "address": 2,  "dataType": "float32", "wordOrder": "CDAB", "value": 40,
+      "signal": { "type": "ramp", "min": 10, "max": 90, "periodSeconds": 300 } },
+
+    { "name": "Tank1 Temp C",       "table": "ir",   "address": 4,  "dataType": "int16", "scale": 10, "value": 21.5,
+      "signal": { "type": "random", "min": 18, "max": 26, "step": 0.2 } },
+
+    { "name": "Line Pressure bar",  "table": "ir",   "address": 5,  "dataType": "uint16", "scale": 100, "value": 3.2,
+      "signal": { "type": "random", "min": 2.5, "max": 4.5, "step": 0.05 } },
+
+    { "name": "Flow Total m3",      "table": "ir",   "address": 6,  "dataType": "uint32", "value": 0,
+      "signal": { "type": "counter", "min": 0, "max": 99999, "step": 1, "periodSeconds": 2 } },
+
+    { "name": "Tank1 Setpoint %",   "table": "hr",   "address": 0,  "dataType": "float32", "value": 75 },
+    { "name": "Pump Speed rpm",     "table": "hr",   "address": 2,  "dataType": "uint16",  "value": 1450 },
+    { "name": "Mode",               "table": "hr",   "address": 3,  "dataType": "uint16",  "value": 1 },
+
+    { "name": "Pump1 Run",          "table": "coil", "address": 0,  "dataType": "bool", "value": 1 },
+    { "name": "Pump2 Run",          "table": "coil", "address": 1,  "dataType": "bool", "value": 0 },
+    { "name": "Valve Open",         "table": "coil", "address": 2,  "dataType": "bool",
+      "signal": { "type": "square", "min": 0, "max": 1, "periodSeconds": 20 } },
+
+    { "name": "High Level Alarm",   "table": "di",   "address": 0,  "dataType": "bool", "value": 0 },
+    { "name": "Door Open",          "table": "di",   "address": 1,  "dataType": "bool", "value": 0 }
+  ]
+}

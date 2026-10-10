@@ -1,0 +1,15 @@
+## .NET
+bin/
+obj/
+publish/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+TestResults/
+*.nupkg
+
+
+# macOS
+.DS_Store

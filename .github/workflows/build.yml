@@ -1,0 +1,37 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release
+      - run: dotnet test --no-build -c Release --verbosity normal
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [ win-x64, linux-x64, osx-arm64 ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Publish single file
+        run: dotnet publish src/ModbusTcpSimulator -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -o out/${{ matrix.rid }}
+      - run: cp -r samples out/${{ matrix.rid }}/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: modbus-sim-${{ matrix.rid }}
+          path: out/${{ matrix.rid }}
